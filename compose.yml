@@ -1,12 +1,23 @@
 services:
   pg2minio:
-    build: .
+    build:
+      context: ./dump
     env_file:
       - .env.dev
     depends_on:
       minio:
         condition: service_healthy
       pg:
+        condition: service_healthy
+  restore:
+    build:
+      context: ./restore
+    env_file:
+      - .env.dev
+    depends_on:
+      pg:
+        condition: service_healthy
+      minio:
         condition: service_healthy
   pg:
     image: postgres:16
@@ -27,5 +38,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - ./check.sh:/check.sh
