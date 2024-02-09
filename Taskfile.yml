@@ -1,0 +1,10 @@
+version: "3"
+
+tasks:
+  default:
+    cmds:
+      - docker compose down
+      - docker compose up -d minio
+      - docker compose up --build pg2minio
+      - docker compose exec minio sh /check.sh
+      - docker compose down
